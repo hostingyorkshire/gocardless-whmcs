@@ -1,5 +1,30 @@
 ![GoCardless](https://s3-eu-west-1.amazonaws.com/gocardless-logos/lo-res.jpg)
 
+# York UK Hosting Fork v1.1.0-YUH
+
+This is a fork of v1.1.0 created by York UK Hosting. The fork implements 
+the following:
+
+1. Fixes the callback 500 error
+2. Account level billing rather than product/service level. A single
+   agreement can then used to bill for any invoice.
+3. Supression of 'payment failed' emails to prevent confusion
+4. Support to request GoCardless payments X days ahead of invoice due date
+   to ensure payments are received by the due date rather than after.
+5. Store the PreAuth in a separate table so that GoCardless can be used
+   alongside a credit/debit card within a single account.
+
+Installation:
+
+The contents of GoCardless_WHMCS directory needs to be copied to the
+/modules/gateway directory. The gocardless_hook.php file in the gocardless
+subdirectory should be moved to /includes/hooks and the two parameters
+modified as required.
+
+v6 compatibility - It has not been tested but it uses init.php and does
+not use any templates so will hopefully work. If you do test let me
+know the outcome - github@yorkukhosting.com.
+
 # Announcement
 
 __As of 15th August 2013, the GoCardless WHMCS module will no longer be supported.__

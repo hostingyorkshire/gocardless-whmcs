@@ -4,6 +4,10 @@
     *
     * @author WHMCSRC <info@whmcs.com>
     * @version 1.1.0
+    *
+    * @fork author: York UK Hosting <github@yorkukhosting.com>
+    * @fork version: 1.1.0-YUH
+    * @fork github: http://github.com/yorkukhosting/gocardless-whmcs/
     */
 
     # load GoCardless library
@@ -186,7 +190,7 @@
         if(($params['oneoffonly'] == 'on') ||
             ($aRecurrings === false) ||
             ($aRecurrings['recurringamount'] <= 0)) {
-            $noPreauth = true;
+            $noPreauth = false; #MOD
         } else {
             $noPreauth = false;
         }
@@ -309,19 +313,22 @@
         # we have already raised a bill with GoCardless (in theory)
         if (!mysql_num_rows($existing_payment_query) || empty($existing_payment['resource_id'])) {
 
-            # query the database to get the relid of all invoice items
-            $invoice_item_query = select_query('tblinvoiceitems', 'relid', array('invoiceid' => $params['invoiceid'], 'type' => 'Hosting'));
-
-            # loop through each returned (each invoice item) and attempt to find a subscription ID
-            while ($invoice_item = mysql_fetch_assoc($invoice_item_query)) {
-                $package_query = select_query('tblhosting', 'subscriptionid', array('id' => $invoice_item['relid']));
-                $package = mysql_fetch_assoc($package_query);
-
-                # if we have found a subscriptionID, store it in $preauthid
-                if (!empty($package['subscriptionid'])) {
-                    $preauthid = $package['subscriptionid'];
-                }
-            }
+            #MOD-START
+            #Use PreAuth table
+            $userid_query = select_query('tblinvoices','userid',array('id' => $params['invoiceid']));
+            $userid_result = mysql_fetch_array($userid_query);
+            
+                 if (!empty($userid_result['userid'])) {
+                    $userid = $userid_result['userid'];
+                    
+                    $preauth_query = select_query('mod_gocardless_preauth','subscriptionid',array('userid' => $userid));
+                    $preauth_result = mysql_fetch_array($preauth_query);
+            
+                      if (!empty($preauth_result['subscriptionid'])) {
+                        $preauthid = $preauth_result['subscriptionid'];
+                      }
+                 }
+            #MOD-END   
 
             # now we are out of the loop, check if we have been able to get the PreAuth ID
             if (isset($preauthid)) {

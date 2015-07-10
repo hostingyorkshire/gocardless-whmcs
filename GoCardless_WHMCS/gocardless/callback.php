@@ -5,17 +5,17 @@
     *
     * @author WHMCS <info@whmcs.com>
     * @version 1.1.0
+    *
+    * @fork author: York UK Hosting <github@yorkukhosting.com>
+    * @fork version: 1.1.0-YUH
+    * @fork github: http://github.com/yorkukhosting/gocardless-whmcs/
     */
 
     # load all required files
     $whmcsdir = dirname(__FILE__) . '/../../../';
 
-    require_once $whmcsdir . 'dbconnect.php';
-    require_once $whmcsdir . '/includes/functions.php';
-    // Looking for WHMCS 5.2 compatability? Comment the above two lines with
-    // "//" and then uncomment the line below:
-    //
-    // require_once $whmcsdir . 'init.php';
+    //Requires WHMCS v5.2 or later
+    require_once $whmcsdir . 'init.php';
 
     require_once $whmcsdir . '/includes/gatewayfunctions.php';
     require_once $whmcsdir . '/includes/invoicefunctions.php';
@@ -59,6 +59,11 @@
                 foreach ($val['pre_authorizations'] as $aPreauth) {
                     # find preauth in tblhosting and empty out the subscriptionid field
                     update_query('tblhosting',array('subscriptionid' => ''),array('subscriptionid'    => $aPreauth['id']));
+
+                    #MOD-START
+                    delete_query('mod_gocardless_preauth',array('subscriptionid'    => $aPreauth['id']));
+                    #MOD-END
+
                     # log each preauth that has been cancelled
                     logTransaction($gateway['paymentmethod'],'GoCardless Preauthorisation Cancelled ('.$aPreauth['id'].')','Cancelled');
                 }
@@ -119,9 +124,9 @@
                         unset($invoiceID,$userID);
 
                     } else {
-                        header('HTTP/1.1 400 Bad Request');
+                        #header('HTTP/1.1 400 Bad Request');
                         logTransaction($gateway['paymentmethod'],'Could not find invoice with ID. callback.php ' . __LINE__ . $invoiceID,'Failed');
-                        exit(__LINE__.': Could not get invoice ID for ' . htmlentities($aBill['id']));
+                        #exit(__LINE__.': Could not get invoice ID for ' . htmlentities($aBill['id']));
                     }
 
                 }

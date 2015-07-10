@@ -6,17 +6,18 @@
     * Either a one of payment (bill) or a pre authorisation can be handled by this file
     * @author WHMCS <info@whmcs.com>
     * @version 1.1.0
+    *
+    * @fork author: York UK Hosting <github@yorkukhosting.com>
+    * @fork version: 1.1.0-YUH
+    * @fork github: http://github.com/yorkukhosting/gocardless-whmcs/
+    *
     */
 
     # load all required files
     $whmcsdir = dirname(__FILE__) . '/../../../';
 
-    require_once $whmcsdir . 'dbconnect.php';
-    require_once $whmcsdir . '/includes/functions.php';
-    // Looking for WHMCS 5.2 compatability? Comment the above two lines with
-    // "//" and then uncomment the line below:
-    //
-    // require_once $whmcsdir . 'init.php';
+    # Requires WHMCS 5.2 or later
+    require_once $whmcsdir . 'init.php';
 
     require_once $whmcsdir . '/includes/gatewayfunctions.php';
     require_once $whmcsdir . '/includes/invoicefunctions.php';
@@ -142,6 +143,20 @@
             while ($res = mysql_fetch_assoc($d)) {
                 update_query('tblhosting', array('subscriptionid' => $pre_auth->id), array('id' => $res['relid']));
             }
+
+            #MOD-START
+            
+            $userID_check = mysql_fetch_array(select_query('mod_gocardless_preauth', 'userid', array('userid' => $userid)));
+            $userID_data = $userID_check['userid'];
+            
+            if(isset($userID_data)) {
+              update_query('mod_gocardless_preauth', array('subscriptionid' => $pre_auth->id), array('userid' => $userID));
+            }
+            else
+            {
+              insert_query('mod_gocardless_preauth', array('userid' => $userID, 'subscriptionid' => $pre_auth->id));
+            }
+            #MOD-END
 
             # clean up
             unset($d,$res);
