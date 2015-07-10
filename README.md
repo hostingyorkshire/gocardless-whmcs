@@ -25,6 +25,16 @@ v6 compatibility - It has not been tested but it uses init.php and does
 not use any templates so will hopefully work. If you do test let me
 know the outcome - github@yorkukhosting.com.
 
+Config at gocardless.com...
+
+Locate 'URI Settings' then populate 'Redirect URI' and 'WebHook URI'.
+
+e.g. Redirect URI = https://www.example.com/modules/gateways/gocardless/redirect.php
+e.g. WebHook URI = https://www.example.com/modules/gateways/gocardless/callback.php
+
+This fork is provided without any warranty implied or otherwise. Test in
+a development environment before using.
+
 # Announcement
 
 __As of 15th August 2013, the GoCardless WHMCS module will no longer be supported.__
