@@ -447,6 +447,18 @@
             UNIQUE KEY `setup_id` (`setup_id`))";
 
             full_query($query);
+
+            # create the new table
+            $query = "CREATE TABLE IF NOT EXISTS `mod_gocardless_preauth` (
+            `id` int(11) NOT NULL auto_increment,
+            `userid` int(10) NOT NULL,
+            `subscriptionid` varchar(16) default NULL,
+            PRIMARY KEY  (`id`),
+            UNIQUE KEY `userid` (`userid`),
+            UNIQUE KEY `subscriptionid` (`subscriptionid`))";
+
+            full_query($query);            
+
         }
     }
 
