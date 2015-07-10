@@ -13,21 +13,13 @@
     *
     */
 
-  # User Account to log API actions against
-  $gc_whmcs_api_user = 'admin';
-
-  # The numbers of days before the payment is due we shoud request the 
-  # payment. Payments normally take 5 - 7 days but 10 days ensures 
-  # payments are received in time, for example Christmas bank holidays
-  # can delay payments. (specified as string)
-  $gc_bill_days_before_due = '10';
-
 function GoCardlessCaptureCron() {
  /*
   * Triggers the capture of the Debit Card payment X days before the
-  * due to date.
+  * due to date. Modify the +X days and adminuser paramters as
+  * necessary
   */
-  $duedate = date('Y-m-d', strtotime("+$gc_bill_days_before_due days"));
+  $duedate = date('Y-m-d', strtotime("+10 days"));
   $result = full_query("Select id,duedate,paymentmethod,status FROM tblinvoices WHERE duedate <= '". $duedate . "' AND status='Unpaid' and paymentmethod='gocardless'");
 
   while ($data = mysql_fetch_array($result)) {
@@ -39,7 +31,7 @@ function GoCardlessCaptureCron() {
     if ($result_data['invoiceid'] != $invoiceid) {
     
       $command = "capturepayment";
-      $adminuser = "$gc_whmcs_api_user";
+      $adminuser = "admin";
       $values["invoiceid"] = $invoiceid;
   
       $capture_results = localAPI($command,$values,$adminuser);
