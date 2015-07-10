@@ -267,9 +267,9 @@
                     # set the setup fee as the first payment amount - recurring amount
                     'setup_fee' => ($aRecurrings['firstpaymentamount'] > $aRecurrings['recurringamount']) ? ($aRecurrings['firstpaymentamount']-$aRecurrings['recurringamount']) : 0,
                     'name' => "Direct Debit payments to " . $CONFIG['CompanyName'],
-                    'interval_length' => $aRecurrings['recurringcycleperiod'],
+                    'interval_length' => '1',
                     # convert $aRecurrings['recurringcycleunits'] to valid value e.g. day,month,year
-                    'interval_unit' => $recurringcycleunit,
+                    'interval_unit' => 'day',
                     # set the start date to the creation date of the invoice - 2 days
                     'start_at' => date_format(date_create($aInvoice['date'].' -2 days'),'Y-m-d\TH:i:sO'),
                     'user' => $aUser,
