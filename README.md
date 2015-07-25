@@ -7,12 +7,12 @@ implements the following:
 
 1. Upgrade of Go Cardless to 0.4.2
 
-Installation:
+##Installation:
 
 The contents of GoCardless_WHMCS directory needs to be copied to the
 /modules/gateway directory.
 
-#Important
+###Important
 
 The gocardless_hook.php file in the gocardless subdirectory should be
 moved to /includes/hooks and the two parameters modified as required.
