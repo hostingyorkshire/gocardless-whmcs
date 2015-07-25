@@ -72,9 +72,9 @@ class GoCardless_Client {
       throw new GoCardless_ClientException('No app_secret specfied');
     }
 
-    // If environment is not set then default to production
+    // If environment is not set then default to sandbox
     if ( ! isset(GoCardless::$environment)) {
-      GoCardless::$environment = 'production';
+      GoCardless::$environment = 'sandbox';
     }
 
     // Take base_url from array
@@ -84,15 +84,6 @@ class GoCardless_Client {
     } else {
       // Otherwise set it based on environment
       $this->base_url = self::$base_urls[GoCardless::$environment];
-    }
-	
-	// Take redirect from array
-    if (isset($account_details['redirect_uri'])) {
-      $this->redirect_uri = $account_details['redirect_uri'];
-      unset($account_details['redirect_uri']);
-    } else {
-      // Otherwise set it based on environment
-      $this->redirect_uri = '';
     }
 
   }
@@ -110,13 +101,16 @@ class GoCardless_Client {
       throw new GoCardless_ArgumentsException('redirect_uri required');
     }
 
-    $endpoint = '/oauth/authorize';
+    $required_options = array(
+      "client_id" => $this->account_details['app_id'],
+      "scope" => "manage_merchant",
+      "response_type" => "code"
+    );
 
-    return $this->base_url . $endpoint .
-      '?client_id='. urlencode($this->account_details['app_id']) .
-      '&redirect_uri=' . urlencode($options['redirect_uri']) .
-      '&scope=manage_merchant' .
-      '&response_type=code';
+    $params = array_merge($required_options, $options);
+    $request = GoCardless_Utils::generate_query_string($params);
+
+    return $this->base_url . "/oauth/authorize/?" . $request;
 
   }
 
@@ -125,7 +119,7 @@ class GoCardless_Client {
    *
    * @param array $params The parameters to use
    *
-   * @return string The access token
+   * @return array Array containing the Merchant ID ('merchant_id') and Access Token ('access_token')
    */
   public function fetch_access_token($params) {
 
@@ -269,7 +263,7 @@ class GoCardless_Client {
    *
    * @param array $params Parameters to send with the request
    *
-   * @return string The result of the HTTP request
+   * @return Bill/Subscription/PreAuthorization The confirmed resource
    */
   public function confirm_resource($params) {
 
