@@ -7,7 +7,7 @@ implements the following:
 
 1. Upgrade of Go Cardless to 0.4.2
 
-##Installation:
+##Installation
 
 The contents of GoCardless_WHMCS directory needs to be copied to the
 /modules/gateway directory.
@@ -17,11 +17,12 @@ The contents of GoCardless_WHMCS directory needs to be copied to the
 The gocardless_hook.php file in the gocardless subdirectory should be
 moved to /includes/hooks and the two parameters modified as required.
 
-v6 compatibility - It has not been tested but it uses init.php and does
-not use any templates so will hopefully work. If you do test let me
-know the outcome - github@yorkukhosting.com.
+### WHMCS v6
 
-Config at gocardless.com...
+v6 compatibility - It has not been tested but it uses init.php and does
+not use any templates so will hopefully work.
+
+### Config at gocardless.com
 
 Locate 'URI Settings' then populate 'Redirect URI' and 'WebHook URI'.
 
