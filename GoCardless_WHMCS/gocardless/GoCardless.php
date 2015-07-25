@@ -25,23 +25,22 @@ require 'GoCardless/Exceptions.php';
 class GoCardless {
 
   /**
-   * The environment: sandbox or live
    *
    * @var constant VERSION
    */
-  const VERSION = '0.3.3';
+  const VERSION = '0.4.2';
 
   /**
-   * The environment: sandbox or live
+   * The environment: 'sandbox' (default) or 'production'
    *
    * @var string $environment
    */
   public static $environment;
 
   /**
-   * The environment: sandbox or live
+   * The GoCardless client instance.
    *
-   * @var object $client
+   * @var GoCardless $client
    */
   public static $client;
 
@@ -130,11 +129,11 @@ class GoCardless {
   }
 
   /**
-   * Generate a URL to give a user to create a new bill
+   * Send an HTTP request to confirm the creation of a new payment resource
    *
-   * @param array $params Parameters to use to generate the URL
+   * @param array $params Parameters to send with the request
    *
-   * @return string The generated URL
+   * @return Bill/Subscription/PreAuthorization The confirmed resource
    */
   public static function confirm_resource($params) {
     return GoCardless::$client->confirm_resource($params);
